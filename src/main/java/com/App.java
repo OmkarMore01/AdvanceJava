@@ -1,11 +1,13 @@
 package com;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.Scanner;
 
 
@@ -28,16 +30,14 @@ public class App
     		Connection con=DriverManager.getConnection(url,user,pass);
     		System.out.println("connection Established..");
     		
-    	//	createTable(con);
-    	//	insertByStatement(con);
-    	//insertByPreparedStatement(con);
-    		//updateStudent(sc, con);
+    		CallableStatement cs=con.prepareCall("{call getStudents(?,?)}");
+    		cs.setInt(1, 2);
+    		cs.registerOutParameter(2, Types.VARCHAR);
+    		cs.execute();
     		
-    		//deletestudentById(sc, con);
-    	//	deleteAllStudents(con);
-    	//getAllRecords(con);
-    		//getStudById(sc, con);
-    	//	batchProcessing(con);
+    		String name=cs.getString(2);
+    		System.out.println("Name collected by Callable statement==>"+name);
+    	
     		
     	}catch (Exception e) {
 			System.out.println(e);
